@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>皈依定课</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@300;400;600;700&family=ZCOOL+XiaoWei&family=Ma+Shan+Zheng&display=swap');
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: #f2ede4;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    padding: 2rem 1rem;
+    font-family: 'Noto Serif SC', 'Songti SC', 'SimSun', 'STSong', serif;
+    line-height: 2;
+    color: #3a3022;
+  }
+
+  /* 宣纸纹理 */
+  body::before {
+    content: '';
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background:
+      radial-gradient(ellipse at 30% 40%, rgba(200,180,150,0.15) 0%, transparent 60%),
+      radial-gradient(ellipse at 70% 70%, rgba(190,170,140,0.10) 0%, transparent 50%),
+      repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 1px,
+        rgba(160,140,110,0.02) 1px,
+        rgba(160,140,110,0.02) 2px
+      );
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .scroll-container {
+    width: 100%;
+    max-width: 820px;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* 顶部焚香 */
+  .incense {
+    text-align: center;
+    margin-bottom: 0.8rem;
+    position: relative;
+    height: 80px;
+  }
+
+  /* 木鱼 · 闻法 */
+  .muyu {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 5px 18px 5px 14px;
+    margin: 0.6em auto 1em auto;
+    background: #ede6d4;
+    border: 1px solid #d6c8b0;
+    border-radius: 20px;
+    cursor: pointer;
+    font-family: 'Noto Serif SC', 'Songti SC', serif;
+    font-size: 0.78rem;
+    color: #8a7a62;
+    letter-spacing: 0.12em;
+    transition: all 0.3s ease;
+    box-shadow: 0 1px 4px rgba(100,80,50,0.06);
+    user-select: none;
+    position: relative;
+  }
+  .muyu:hover {
+    border-color: #b89a6e;
+    color: #6a5a40;
+    box-shadow: 0 2px 8px rgba(100,80,50,0.10);
+  }
+  .muyu:active {
+    transform: scale(0.96);
+  }
+  .muyu-dot {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 35% 35%, #c8b89a, #a89070);
+    box-shadow: inset 0 1px 2px rgba(0,0,0,0.1);
+    transition: transform 0.15s ease;
+  }
+  .muyu-hit {
+    animation: hit 0.25s ease;
+  }
+  @keyframes hit {
+    0% { transform: scale(1); }
+    30% { transform: scale(0.6); box-shadow: 0 0 6px rgba(180,140,80,0.4); }
+    60% { transform: scale(1.1); }
+    100% { transform: scale(1); }
+  }
+  .muyu-text {
+    display: inline-block;
+    vertical-align: middle;
+  }
+  .incense-stick {
+    display: inline-block;
+    position: relative;
+    width: 3px;
+    height: 55px;
+    background: linear-gradient(to top, #b89a6e, #9a7e58);
+    border-radius: 2px 2px 0 0;
+  }
+  .incense-stick::before {
+    content: '';
+    position: absolute;
+    top: -2px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 7px;
+    height: 7px;
+    background: radial-gradient(circle, #e86030, #c04015 40%, transparent 70%);
+    border-radius: 50%;
+    animation: glow 3s ease-in-out infinite;
+  }
+  .incense-smoke {
+    position: absolute;
+    top: -24px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 2px;
+    height: 24px;
+    background: linear-gradient(to top, rgba(160,140,110,0.3), transparent);
+    animation: rise 4s ease-out infinite;
+  }
+  .incense-smoke:nth-child(2) { animation-delay: 1.2s; left: calc(50% - 5px); }
+  .incense-smoke:nth-child(3) { animation-delay: 2.4s; left: calc(50% + 4px); }
+
+  @keyframes glow {
+    0%, 100% { opacity: 0.5; transform: translateX(-50%) scale(0.8); }
+    50% { opacity: 1; transform: translateX(-50%) scale(1.2); }
+  }
+  @keyframes rise {
+    0% { opacity: 0.35; transform: translateX(-50%) translateY(0); }
+    100% { opacity: 0; transform: translateX(-50%) translateY(-32px); }
+  }
+
+  /* 主卷轴卡片 */
+  .scroll {
+    background: linear-gradient(180deg, #fdfaf5 0%, #f8f4ec 100%);
+    border: 1px solid #d6c8b0;
+    border-radius: 4px;
+    padding: 3rem 2.8rem;
+    position: relative;
+    box-shadow:
+      0 2px 20px rgba(100,80,50,0.12),
+      inset 0 1px 0 rgba(255,252,240,0.8);
+  }
+
+  /* 卷轴轴头 */
+  .scroll::before,
+  .scroll::after {
+    content: '';
+    position: absolute;
+    left: 0; right: 0;
+    height: 10px;
+    background: linear-gradient(90deg,
+      #b89a6e 0%, #d4b88a 20%, #e8cc9e 45%, #f0d8a8 55%,
+      #e8cc9e 65%, #d4b88a 80%, #b89a6e 100%);
+    border-radius: 3px;
+    box-shadow: 0 1px 3px rgba(100,80,50,0.15);
+  }
+  .scroll::before { top: -5px; }
+  .scroll::after { bottom: -5px; }
+
+  /* 轴头两侧装饰（仿木轴端） */
+  .scroll::before {
+    box-shadow:
+      0 1px 3px rgba(100,80,50,0.15),
+      inset 0 1px 2px rgba(255,240,210,0.4);
+  }
+
+  /* 标题 */
+  .title-wrapper {
+    text-align: center;
+    margin-bottom: 2.2rem;
+    padding-bottom: 1.2rem;
+    border-bottom: 1px solid #d6c8b0;
+    position: relative;
+  }
+  .title-wrapper::after {
+    content: '◇';
+    position: absolute;
+    bottom: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    color: #b89a6e;
+    font-size: 14px;
+    background: #fdfaf5;
+    padding: 0 14px;
+  }
+  .main-title {
+    font-family: 'ZCOOL XiaoWei', 'Noto Serif SC', serif;
+    font-size: 2rem;
+    font-weight: 600;
+    letter-spacing: 0.35em;
+    color: #3a3022;
+    text-shadow: 0 1px 1px rgba(255,252,240,0.5);
+    margin-bottom: 0.4rem;
+  }
+  .subtitle {
+    font-size: 0.82rem;
+    color: #9a8a72;
+    letter-spacing: 0.25em;
+  }
+
+  /* 内容主体 */
+  .content {
+    font-size: 1rem;
+    font-weight: 300;
+    color: #3a3022;
+    letter-spacing: 0.04em;
+    position: relative;
+  }
+
+  .content p {
+    margin-bottom: 1.1em;
+    text-indent: 2em;
+  }
+
+  /* 章节标题 */
+  .section-heading {
+    font-family: 'Noto Serif SC', 'Songti SC', serif;
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #3a3022;
+    letter-spacing: 0.15em;
+    margin-top: 2.5em;
+    margin-bottom: 1em;
+    text-indent: 0;
+    position: relative;
+    padding-left: 1.2em;
+  }
+  .section-heading::before {
+    content: '▎';
+    position: absolute;
+    left: 0;
+    color: #b89a6e;
+    font-size: 1.1em;
+    top: 0.05em;
+  }
+
+  /* 子标题 */
+  .sub-heading {
+    font-size: 1.02rem;
+    font-weight: 600;
+    color: #6a5a40;
+    margin-top: 1.8em;
+    margin-bottom: 0.8em;
+    text-indent: 0;
+  }
+
+  /* 三宝歌 — 古书引文样式 */
+  .song {
+    font-family: 'Noto Serif SC', 'Songti SC', serif;
+    font-weight: 300;
+    color: #4a3e30;
+    padding: 1em 1.5em;
+    margin: 1em 0;
+    background: rgba(180,160,120,0.08);
+    border-left: 2px solid #b89a6e;
+    border-radius: 0 4px 4px 0;
+  }
+  .song p {
+    text-indent: 0;
+    margin-bottom: 0.6em;
+    letter-spacing: 0.06em;
+  }
+
+  /* 皈依偈 */
+  .refrain {
+    text-align: center;
+    color: #4a3e30;
+    padding: 1em 0;
+    margin: 0.8em 0;
+    font-weight: 400;
+    letter-spacing: 0.08em;
+  }
+  .refrain p {
+    text-indent: 0;
+    margin-bottom: 0.3em;
+  }
+
+  /* 真言 */
+  .mantra {
+    text-align: center;
+    color: #5a4a30;
+    font-size: 1.02rem;
+    padding: 1em;
+    margin: 1em 0;
+    background: rgba(180,160,120,0.08);
+    border-radius: 4px;
+    letter-spacing: 0.06em;
+  }
+
+  /* 回向 */
+  .dedication {
+    margin-top: 2.5em;
+    padding-top: 1.5em;
+    border-top: 1px solid #d6c8b0;
+    text-align: center;
+    color: #4a3e30;
+  }
+  .dedication p {
+    text-indent: 0;
+    margin-bottom: 0.3em;
+  }
+
+  /* 注释 */
+  .note {
+    color: #8a7a62;
+    font-size: 0.92rem;
+  }
+
+  /* 图片容器 — 禅意装裱 */
+  .figure {
+    margin: 2.2em auto;
+    text-align: center;
+    position: relative;
+  }
+  .figure-inner {
+    display: inline-block;
+    padding: 8px;
+    background: #f8f4ec;
+    border: 1px solid #d6c8b0;
+    border-radius: 3px;
+    box-shadow: 0 2px 16px rgba(100,80,50,0.10);
+    position: relative;
+    max-width: 100%;
+  }
+  .figure-inner::before {
+    content: '';
+    position: absolute;
+    top: 3px; left: 3px; right: 3px; bottom: 3px;
+    border: 1px solid rgba(180,160,120,0.15);
+    border-radius: 1px;
+    pointer-events: none;
+  }
+  .figure img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    border-radius: 1px;
+    filter: saturate(0.85) contrast(0.95);
+    transition: filter 0.8s ease;
+  }
+  .figure:hover img {
+    filter: saturate(1) contrast(1);
+  }
+  .figure .caption {
+    margin-top: 0.7em;
+    font-size: 0.78rem;
+    color: #a8987a;
+    letter-spacing: 0.25em;
+    font-style: italic;
+  }
+
+  /* 底部 */
+  .lotus-footer {
+    text-align: center;
+    margin-top: 2.5rem;
+    padding-top: 1.2rem;
+    border-top: 1px solid #d6c8b0;
+    color: #b89a6e;
+    font-size: 0.75rem;
+    letter-spacing: 0.3em;
+  }
+  .lotus {
+    display: inline-block;
+    font-size: 1.2rem;
+    margin-bottom: 0.4rem;
+    animation: float 4s ease-in-out infinite;
+  }
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-4px); }
+  }
+
+  /* 手绘分隔 */
+  .brush-line {
+    text-align: center;
+    color: rgba(180,160,120,0.25);
+    font-size: 0.8rem;
+    letter-spacing: 0.5em;
+    margin: 1.5em 0;
+    user-select: none;
+  }
+
+  /* 响应式 */
+  @media (max-width: 600px) {
+    .scroll { padding: 2rem 1.2rem; }
+    .main-title { font-size: 1.5rem; letter-spacing: 0.2em; }
+    .content { font-size: 0.95rem; }
+    .section-heading { font-size: 1.1rem; }
+  }
+
+  /* 动画渐入 */
+  .fade-in {
+    opacity: 0;
+    transform: translateY(10px);
+    animation: fadeIn 0.8s ease forwards;
+  }
+  @keyframes fadeIn {
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .fade-in:nth-child(1) { animation-delay: 0.1s; }
+  .fade-in:nth-child(2) { animation-delay: 0.2s; }
+  .fade-in:nth-child(3) { animation-delay: 0.3s; }
+  .fade-in:nth-child(4) { animation-delay: 0.4s; }
+  .fade-in:nth-child(5) { animation-delay: 0.5s; }
+  .fade-in:nth-child(6) { animation-delay: 0.6s; }
+
+  /* 自定义滚动条 */
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: #f2ede4; }
+  ::-webkit-scrollbar-thumb { background: #c8b89a; border-radius: 3px; }
+  ::-webkit-scrollbar-thumb:hover { background: #b89a6e; }
+</style>
+</head>
+<body>
+<div class="scroll-container">
+
+  <!-- 焚香 -->
+  <div class="incense">
+    <div class="incense-stick">
+      <div class="incense-smoke"></div>
+      <div class="incense-smoke"></div>
+      <div class="incense-smoke"></div>
+    </div>
+  </div>
+
+  <!-- 卷轴 -->
+  <div class="scroll">
+
+    <!-- 标题 -->
+    <div class="title-wrapper">
+      <div class="main-title">皈依· 定课</div>
+      <div class="subtitle">— 西溪欢喜 —</div>
+    </div>
+
+    <!-- 内容 — 原文一字不改 -->
+    <div class="content">
+
+      <div class="fade-in">
+
+        <p class="section-heading">一、唱三宝歌</p>
+
+        <div class="figure">
+          <div class="figure-inner">
+            <img src="1.jpg" alt="佛像" loading="lazy">
+          </div>
+          <div class="caption">南无本师释迦牟尼佛</div>
+        </div>
+
+        <!-- 闻法 · 木鱼 -->
+        <audio id="bgm" preload="auto" src="audio.mp3"></audio>
+        <div class="muyu" onclick="(function(){
+          var a = document.getElementById('bgm');
+          a.currentTime = 0;
+          a.play();
+          var b = this.querySelector('.muyu-dot');
+          b.classList.remove('muyu-hit');
+          void b.offsetWidth;
+          b.classList.add('muyu-hit');
+        })()">
+          <span class="muyu-dot"></span>
+          <span class="muyu-text">皈依共修</span>
+        </div>
+
+        <div class="song">
+          <p>人天长夜，宇宙黮黯，谁启以光明？三界火宅，众苦煎迫，谁济以安宁？大悲大智大雄力，南无佛陀耶！昭朗万有，衽席群生，功德莫能名！今乃知，唯此是，真正皈依处。尽形寿，献身命，信受勤奉行！</p>
+          <p>二谛总持，三学增上，恢恢法界身。净德既圆，染患斯寂，荡荡涅槃城。众缘性空唯识现，南无达摩耶！理无不彰，蔽无不解，焕乎其大明！今乃知，唯此是，真正皈依处。尽形寿，献身命，信受勤奉行！</p>
+          <p>依净律仪，成妙和合，灵山遗芳型。修行证果，弘法利世，焰续佛灯明。三乘圣贤何济济，南无僧伽耶！统理大众，一切无碍，住持正法城！今乃知，唯此是，真正皈依处。尽形寿，献身命，信受勤奉行！</p>
+        </div>
+
+      </div>
+
+      <div class="brush-line">—— —— ——</div>
+
+      <div class="fade-in">
+
+        <p class="section-heading">二、发心、忏悔、供养</p>
+
+        <!-- 图片占位：忏悔处可配跪拜/合十图 -->
+        <!-- <div class="figure"><img src="..." alt=""><div class="caption">——</div></div> -->
+
+        <p class="sub-heading">1．发心、忏悔：</p>
+
+        <p>我今发心，不为自求人天福报、声闻、缘觉，乃至权乘诸位菩萨，唯依最上乘发菩提心，愿与法界众生一时同得阿耨多罗三藐三菩提。</p>
+        <p>皈依十方尽虚空界一切诸佛。</p>
+        <p>皈依十方尽虚空界一切尊法。</p>
+        <p>皈依十方尽虚空界一切贤圣僧。</p>
+        <p>如是等一切世界，诸佛世尊，常住在世。是诸世尊，当慈念我：若我此生，若我前生，从无始生死以来，所作众罪，若自作，若教他作，见作随喜；若塔若僧，若四方僧物，若自取，若教他取，见取随喜；五无间罪，若自作，若教他作，见作随喜；十不善道，若自作，若教他作，见作随喜；所作罪障，或有覆藏，或不覆藏，应堕地狱、饿鬼、畜生、诸余恶趣、边地下贱，及蔑戾车，如是等处，所作罪障，今皆忏悔。今诸佛世尊，当证知我，当忆念我。 （忆念自己无始以来所作罪业，尤其是近来的不如法行为，于十方诸佛菩萨前生起真诚忏悔之心，并安住于忏悔之心，静默三分钟）</p>
+
+        <p class="sub-heading">2．修七支供：</p>
+
+        <div class="song">
+          <p>所有十方世界中，三世一切人狮子，我以清净身语意，一切遍礼尽无余。</p>
+          <p>普贤行愿威神力，普现一切如来前，一身复现刹尘身，一一遍礼刹尘佛。</p>
+          <p>于一尘中尘数佛，各处菩萨众会中，无尽法界尘亦然，深信诸佛皆充满。</p>
+          <p>各以一切音声海，普出无尽妙言辞，尽于未来一切劫，赞佛甚深功德海。</p>
+          <p>以诸最胜妙华鬘，伎乐涂香及伞盖，如是最胜庄严具，我以供养诸如来。</p>
+          <p>最胜衣服最胜香，末香烧香与灯烛，一一皆如妙高聚，我悉供养诸如来。</p>
+          <p>我以广大胜解心，深信一切三世佛，悉以普贤行愿力，普遍供养诸如来。</p>
+          <p>我昔所造诸恶业，皆由无始贪瞋痴，从身语意之所生，一切我今皆忏悔。</p>
+          <p>十方一切诸众生，二乘有学及无学，一切如来与菩萨，所有功德皆随喜。</p>
+          <p>十方所有世间灯，最初成就菩提者，我今一切皆劝请，转于无上妙法-轮。</p>
+          <p>诸佛若欲示涅槃，我悉至诚而劝请，唯愿久住刹尘劫，利乐一切诸众生。</p>
+          <p>所有礼赞供养福，请佛住世转-法-轮，随喜忏悔诸善根，回向众生及佛道。</p>
+          <p>乃至虚空世界尽，众生及业烦恼尽，如是四法广无边，愿今回向亦如是。</p>
+        </div>
+
+        <p class="sub-heading">3．念七佛灭罪真言，清洗罪障（七遍）</p>
+
+        <div class="mantra">
+          离巴离巴帝，估哈估哈帝，达拉尼帝，尼嘎拉帝，微嘛离帝，马哈嘎帝，（加母）（拉母）（扎母）帝，司哇哈。 （在念诵真言时，观想无始以来所造罪业念念消融在三宝的无尽功德中）
+        </div>
+
+      </div>
+
+      <div class="brush-line">—— —— ——</div>
+
+      <div class="fade-in">
+
+        <p class="section-heading">三、观察修</p>
+
+        <!-- 图片占位：观察修处可配静坐/思惟图 -->
+        <!-- <div class="figure"><img src="..." alt=""><div class="caption">——</div></div> -->
+
+        <p>1．思惟暇满人身蕴含着重大意义，认识到唯有皈依三宝才能实现暇满人身的重大意义。</p>
+        <p>2．思惟死亡一定，死期不定，死时除佛法外余皆无益，对三宝生起猛烈的皈依之心。</p>
+        <p>3．念三恶道苦，生起恐惧感，生起求拯求救之心。</p>
+        <p>4．忆念三宝功德，对三宝生起极大的信心，确定以三宝为人生的依赖及归宿。</p>
+
+      </div>
+
+      <div class="brush-line">—— —— ——</div>
+
+      <div class="fade-in">
+
+        <p class="section-heading">四、安住修</p>
+
+        <div class="figure">
+          <div class="figure-inner">
+            <img src="2.jpg" alt="景色安住当下" loading="lazy">
+          </div>
+          <div class="caption">安住 · 当下</div>
+        </div>
+
+        <p>1．念诵三皈依：南无布达耶、南无达玛耶、南无僧伽耶。</p>
+        <p>（在念诵三皈依时，观想六道一切众生在和自己一起念诵，并念念中融入十方三宝的无尽功德中。）</p>
+        <p>2．止静：观想十方三宝无尽的功德，安住十方三宝的无尽功德中</p>
+
+      </div>
+
+      <div class="brush-line">—— —— ——</div>
+
+      <div class="fade-in">
+
+        <p class="section-heading">五、发愿</p>
+
+        <!-- 图片占位：发愿处可配莲华/灯明图 -->
+        <!-- <div class="figure"><img src="..." alt=""><div class="caption">——</div></div> -->
+
+        <p class="sub-heading">1．奉行五戒</p>
+
+        <p>第一条不杀生：认识到生命的毁灭所造成的痛苦，我发誓培养悲心，学习各种方法来保护人、动物、植物的生命。我决心不杀生，不教人杀，在思想上和生活中不宽恕自己的任何一种杀生行为，同时也不随喜任何人的杀生行为。</p>
+        <p>第二条不偷盗：认识到由剥削、压迫、偷盗和社会的不公正等等现象所造成的痛苦，　我发誓培养慈心，学习各种方法，为人、动物和植物的良好生存状态而努力工作。我发誓，通过与那些真正需要的人分享我的时间、精力和物质财富的方式，来修布施。我决心不偷盗，不将任何属于他人的物品据为己有。我将尊重他人的财产所有权，但我将阻止以人类的痛苦为代价或以地球上其它地区人民的痛苦为代价来为自己谋取利益的行为。</p>
+        <p>第三条不邪淫：认识到由不正当的性关糸所造成的痛苦，我发誓培养责任心，　并学习维护个体、夫妻、家庭和社会的安定与团结的方法。我决心不卷入没有爱和长期承诺的性关系中。为了维护我和他人的幸福，我决心尊重自己和他人的承诺。在我力所能及的范围内，我将做一切事情来保护儿童不受性侵害，防止夫妻关系和各个家庭因不正当的性关系而破裂。</p>
+        <p>第四条不妄语：认识到由说话心不在焉和没有倾听能力所造成的痛苦，　我发誓修习爱语和倾听，以给他人带来幸福和快乐，从而减轻他们的苦恼。明了语言可以创造幸福或制造痛苦，我发誓学习讲实语，讲能够激发人的自信、给人带来快乐和希望的话。我决心不传播不确定的消息、不批评或谴责我没有把握的事情，避免讲会导致分裂或不和的话，或会导致家　庭、团体破裂的话。我将尽一切努力来调解和平息所有的矛盾，无论是多么微小的矛盾。</p>
+        <p>第五条不饮酒：认识到由不适当的消费所造成的痛苦，我发誓通过有觉照的饮食和消费为自己、为家庭、为社会而保持良好的健康，无论是生理方面，还是心理方面。我发誓只吸收那些对维护我个人、我的家人和社会大众的身心健康与和谐有益的东西。我决心不饮酒，不吃有害的食品，不接触不健康的精神产品，比如某些特定的电视节目、杂志、书、电影及谈话等。我知道，用这些"毒品"来损害我的身心就是背叛了我的祖先、我的父母、我的社会和我的后代。我将通过修习既适用于个体也适用于社会的这五戒，使自己心中和社会上的暴力、恐惧、愤怒及混乱状态得到改变。我明白，要改造自我，改造社会，一份合适的戒规是必不可少的。</p>
+
+        <p class="sub-heading">2．修习四无量心</p>
+
+        <div class="refrain">
+          <p>愿诸众生永具安乐及安乐因， （慈无量）</p>
+          <p>愿诸众生永离众苦及众苦因， （悲无量）</p>
+          <p>愿诸众生永具无苦之乐，身心怡悦， （喜无量）</p>
+          <p>愿诸众生远离贪嗔之心，住平等舍。 （舍无量）</p>
+        </div>
+
+      </div>
+
+      <div class="brush-line">—— —— ——</div>
+
+      <div class="fade-in">
+
+        <p class="section-heading">六、回向</p>
+
+        <div class="figure">
+          <div class="figure-inner">
+            <img src="3.jpg" alt="佛像" loading="lazy">
+          </div>
+          <div class="caption">十方三世一切佛</div>
+        </div>
+
+        <div class="dedication">
+          <p>皈依功德殊胜行，无边胜福皆回向。普愿沉溺诸众生，速往无量光佛剎。</p>
+          <p>十方三世一切佛，一切菩萨摩诃萨，摩诃般若波罗蜜。</p>
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- 底部 -->
+    <div class="lotus-footer">
+      <div class="lotus">☸</div>
+      <div>南无布达耶 · 南无达玛耶 · 南无僧伽耶</div>
+    </div>
+
+  </div>
+
+</div>
+</body>
+</html>
