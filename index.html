@@ -467,12 +467,16 @@
         <audio id="bgm" preload="auto" src="audio.mp3"></audio>
         <div class="muyu" onclick="(function(){
           var a = document.getElementById('bgm');
-          a.currentTime = 0;
-          a.play();
-          var b = this.querySelector('.muyu-dot');
-          b.classList.remove('muyu-hit');
-          void b.offsetWidth;
-          b.classList.add('muyu-hit');
+          if (a.paused || a.ended) {
+            a.currentTime = 0;
+            a.play();
+            var b = this.querySelector('.muyu-dot');
+            b.classList.remove('muyu-hit');
+            void b.offsetWidth;
+            b.classList.add('muyu-hit');
+          } else {
+            a.pause();
+          }
         })()">
           <span class="muyu-dot"></span>
           <span class="muyu-text">皈依共修</span>
