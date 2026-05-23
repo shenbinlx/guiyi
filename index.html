@@ -421,6 +421,46 @@
   .fade-in:nth-child(5) { animation-delay: 0.5s; }
   .fade-in:nth-child(6) { animation-delay: 0.6s; }
 
+  /* 首屏欢迎遮罩 — 0.jpg 弹窗 */
+  #splash {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    background: rgba(242,237,228,0.88);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: opacity 0.7s ease;
+  }
+  #splash.splash-hide {
+    opacity: 0;
+    pointer-events: none;
+  }
+  #splash img {
+    max-width: 88vw;
+    max-height: 80vh;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+    border-radius: 6px;
+    box-shadow: 0 8px 48px rgba(100,80,50,0.18);
+    border: 1px solid #d6c8b0;
+  }
+  #splash .splash-hint {
+    margin-top: 1.2rem;
+    font-family: 'Noto Serif SC', serif;
+    font-size: 0.8rem;
+    color: #b89a6e;
+    letter-spacing: 0.25em;
+    animation: pulseHint 2.5s ease-in-out infinite;
+  }
+  @keyframes pulseHint {
+    0%, 100% { opacity: 0.4; }
+    50% { opacity: 0.9; }
+  }
+
   /* 自定义滚动条 */
   ::-webkit-scrollbar { width: 6px; }
   ::-webkit-scrollbar-track { background: #f2ede4; }
@@ -429,6 +469,13 @@
 </style>
 </head>
 <body>
+
+<!-- 首屏欢迎遮罩 -->
+<div id="splash" onclick="dismissSplash()">
+  <img src="0.jpg" alt="">
+  <div class="splash-hint">点击任意处进入</div>
+</div>
+
 <div class="scroll-container">
 
   <!-- 焚香 -->
@@ -628,4 +675,26 @@
 
 </div>
 </body>
+<script>
+var _splashShownAtBottom = false;
+
+function dismissSplash() {
+  document.getElementById('splash').classList.add('splash-hide');
+}
+
+function showSplash() {
+  var s = document.getElementById('splash');
+  s.classList.remove('splash-hide');
+}
+
+window.addEventListener('scroll', function() {
+  if (_splashShownAtBottom) return;
+  var scrollBottom = window.innerHeight + window.scrollY;
+  var pageHeight = document.body.scrollHeight;
+  if (scrollBottom >= pageHeight - 30) {
+    _splashShownAtBottom = true;
+    showSplash();
+  }
+});
+</script>
 </html>
