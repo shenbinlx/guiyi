@@ -696,5 +696,46 @@ window.addEventListener('scroll', function() {
     showSplash();
   }
 });
+
+/* --- 音频自动滚动 --- */
+var _autoPos = {
+  '甲': 401.5, '乙': 1376, '丙': 1975, '丁': 2921.5,
+  '戊': 3216.5, '己': 4220.5, '庚': 5132.5, '辛': 5469
+};
+var _autoTimeline = [
+  { t: 0,       pos: '甲' },
+  { t: 5*60+20, pos: '乙' },   // 5:20
+  { t: 8*60+35, pos: '丙' },   // 8:35
+  { t: 13*60+50,pos: '丁' },   // 13:50
+  { t: 16*60+40,pos: '戊' },   // 16:40
+  { t: 27*60+40,pos: '己' },   // 27:40
+  { t: 31*60+6, pos: '庚' },   // 31:06
+  { t: 31*60+30,pos: '辛' },   // 31:30
+];
+var _autoIdx = 0;
+
+function autoScrollTo(label) {
+  var y = _autoPos[label];
+  if (y !== undefined) window.scrollTo({ top: y, behavior: 'smooth' });
+}
+
+var _autoAudio = document.getElementById('bgm');
+
+_autoAudio.addEventListener('play', function() {
+  _autoIdx = 0;
+  autoScrollTo('甲');
+});
+
+_autoAudio.addEventListener('timeupdate', function() {
+  var t = _autoAudio.currentTime;
+  while (_autoIdx < _autoTimeline.length - 1 && t >= _autoTimeline[_autoIdx + 1].t) {
+    _autoIdx++;
+    autoScrollTo(_autoTimeline[_autoIdx].pos);
+  }
+});
+
+_autoAudio.addEventListener('ended', function() {
+  window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+});
 </script>
 </html>
