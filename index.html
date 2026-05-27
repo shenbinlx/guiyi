@@ -435,6 +435,25 @@
     .main-title { font-size: 1.5rem; letter-spacing: 0.2em; }
     .content { font-size: 0.95rem; }
     .section-heading { font-size: 1.1rem; }
+    /* 手机端：七支供恢复成旧式段落 */
+    .seven-branches {
+      font-family: 'Noto Serif SC', 'Songti SC', serif;
+      font-weight: 300;
+      color: #4a3e30;
+      padding: 0;
+      margin: 1em 0;
+      background: none;
+      border-left: none;
+      border-radius: 0;
+    }
+    .verse-text {
+      position: static;
+      padding-left: 0;
+      margin-bottom: 0.6em;
+      letter-spacing: 0.06em;
+      line-height: 2;
+    }
+    .branch-tag { display: none; }
   }
 
   /* 动画渐入 */
@@ -753,12 +772,16 @@ function autoScrollTo(label) {
 
 var _autoAudio = document.getElementById('bgm');
 
+function _isDesktop() { return window.innerWidth > 600; }
+
 _autoAudio.addEventListener('play', function() {
+  if (!_isDesktop()) return;
   _autoIdx = 0;
   autoScrollTo('甲');
 });
 
 _autoAudio.addEventListener('timeupdate', function() {
+  if (!_isDesktop()) return;
   var t = _autoAudio.currentTime;
   while (_autoIdx < _autoTimeline.length - 1 && t >= _autoTimeline[_autoIdx + 1].t) {
     _autoIdx++;
@@ -767,6 +790,7 @@ _autoAudio.addEventListener('timeupdate', function() {
 });
 
 _autoAudio.addEventListener('ended', function() {
+  if (!_isDesktop()) return;
   window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
 });
 </script>
