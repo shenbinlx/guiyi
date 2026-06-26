@@ -556,7 +556,7 @@
 
         <div class="figure">
           <div class="figure-inner">
-            <img src="1.jpg" alt="佛像" loading="lazy">
+            <img src="1.jpg" alt="佛像" >
           </div>
           <div class="caption">南无本师释迦牟尼佛</div>
         </div>
@@ -655,7 +655,7 @@
 
         <div class="figure">
           <div class="figure-inner">
-            <img src="2.jpg" alt="景色安住当下" loading="lazy">
+            <img src="2.jpg" alt="景色安住当下" >
           </div>
           <div class="caption">安住 · 当下</div>
         </div>
@@ -702,7 +702,7 @@
 
         <div class="figure">
           <div class="figure-inner">
-            <img src="3.jpg" alt="佛像" loading="lazy">
+            <img src="3.jpg" alt="佛像" >
           </div>
           <div class="caption">十方三世一切佛</div>
         </div>
@@ -738,11 +738,11 @@ function showSplash() {
   s.classList.remove('splash-hide');
 }
 
+/* 滚动到页面底部才弹 */
 window.addEventListener('scroll', function() {
   if (_splashShownAtBottom) return;
   var scrollBottom = window.innerHeight + window.scrollY;
-  var pageHeight = document.body.scrollHeight;
-  if (scrollBottom >= pageHeight - 30) {
+  if (scrollBottom >= document.body.scrollHeight - 10) {
     _splashShownAtBottom = true;
     showSplash();
   }
