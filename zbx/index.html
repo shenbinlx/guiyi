@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>欢喜大力三组 · 共修安排</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@300;400;500;600;700&family=ZCOOL+XiaoWei&family=Ma+Shan+Zheng&display=swap');
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --ink: #332c23;
+    --muted: #8a7b66;
+    --soft: #b0a28a;
+    --paper: #f7f3ec;
+    --card: #fefcf8;
+    --line: #e2d5c2;
+    --cinnabar: #9b4b31;
+    --gold: #b8925a;
+  }
+
+  body {
+    min-height: 100vh;
+    padding: 2rem 1rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: var(--ink);
+    font-family: 'Noto Serif SC', 'Songti SC', 'SimSun', 'STSong', serif;
+    line-height: 1.8;
+    background:
+      radial-gradient(ellipse at 20% 30%, rgba(184, 146, 90, 0.10) 0%, transparent 50%),
+      radial-gradient(ellipse at 80% 70%, rgba(155, 75, 49, 0.06) 0%, transparent 50%),
+      linear-gradient(160deg, #f0e8dc 0%, #f7f1e8 40%, #e8dfd1 100%);
+  }
+
+  .page {
+    width: 100%;
+    max-width: 880px;
+  }
+
+  /* ---- Hero 区：课程名 + 组名 ---- */
+  .hero {
+    text-align: center;
+    padding: 2.8rem 1.5rem 2rem;
+    background: linear-gradient(180deg, var(--card) 0%, rgba(254,252,248,0.85) 100%);
+    border: 1px solid rgba(200, 182, 155, 0.4);
+    border-radius: 10px 10px 0 0;
+    box-shadow: 0 4px 20px rgba(80, 61, 35, 0.06);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: -60px;
+    right: -40px;
+    width: 180px;
+    height: 180px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(184, 146, 90, 0.07), transparent 70%);
+    pointer-events: none;
+  }
+
+  .hero::after {
+    content: '●';
+    position: absolute;
+    left: 2.5rem;
+    bottom: 1.2rem;
+    font-size: 0.5rem;
+    color: var(--gold);
+    opacity: 0.3;
+    letter-spacing: 0.8em;
+  }
+
+  .course-tag {
+    display: inline-block;
+    padding: 0.15rem 1rem;
+    border: 1px solid var(--cinnabar);
+    border-radius: 999px;
+    color: var(--cinnabar);
+    font-size: 0.7rem;
+    letter-spacing: 0.18em;
+    margin-bottom: 0.8rem;
+  }
+
+  h1 {
+    font-family: 'ZCOOL XiaoWei', 'Noto Serif SC', serif;
+    font-size: clamp(1.8rem, 5.5vw, 3.2rem);
+    font-weight: 500;
+    letter-spacing: 0.16em;
+    line-height: 1.3;
+    color: #31271d;
+  }
+
+  .group-name {
+    margin-top: 0.6rem;
+    color: var(--muted);
+    font-size: 0.72rem;
+    letter-spacing: 0.24em;
+  }
+
+  .group-name em {
+    font-style: normal;
+    color: var(--cinnabar);
+  }
+
+  /* ---- 主内容区 ---- */
+  .main-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1px;
+    background: rgba(200, 182, 155, 0.35);
+    border: 1px solid rgba(200, 182, 155, 0.35);
+    border-top: none;
+    border-radius: 0 0 10px 10px;
+    overflow: hidden;
+    box-shadow: 0 4px 20px rgba(80, 61, 35, 0.06);
+  }
+
+  .panel {
+    background: rgba(254,252,248,0.9);
+    padding: 1.5rem 1.4rem;
+  }
+
+  .panel-title {
+    font-size: 0.7rem;
+    color: var(--muted);
+    letter-spacing: 0.22em;
+    margin-bottom: 0.8rem;
+    padding-bottom: 0.4rem;
+    border-bottom: 1px solid var(--line);
+  }
+
+  /* ---- 日程卡片 ---- */
+  .schedule-grid {
+    display: grid;
+    gap: 0.8rem;
+  }
+
+  .sch-item {
+    display: flex;
+    align-items: baseline;
+    gap: 1rem;
+    padding: 0.5rem 0;
+    border-bottom: 1px dashed rgba(200, 182, 155, 0.25);
+  }
+  .sch-item:last-child { border-bottom: none; }
+
+  .sch-label {
+    color: var(--muted);
+    font-size: 0.75rem;
+    min-width: 5.5em;
+    letter-spacing: 0.1em;
+  }
+
+  .sch-value {
+    font-size: 1.05rem;
+    color: var(--ink);
+    font-weight: 500;
+  }
+
+  /* ---- 轮值表 ---- */
+  .duty-grid {
+    display: grid;
+    gap: 0.6rem;
+  }
+
+  .duty-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.55rem 0.8rem;
+    background: rgba(239, 232, 220, 0.35);
+    border-radius: 6px;
+    border-left: 3px solid var(--gold);
+  }
+
+  .duty-label {
+    font-size: 0.8rem;
+    color: var(--muted);
+    letter-spacing: 0.08em;
+  }
+
+  .duty-person {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #443226;
+    letter-spacing: 0.12em;
+  }
+
+  .duty-note {
+    font-size: 0.65rem;
+    color: var(--soft);
+    margin-left: 0.5rem;
+  }
+
+  /* ---- 规则 + 成员 ---- */
+  .rules-text {
+    font-size: 0.82rem;
+    color: #705d46;
+    line-height: 1.9;
+    padding: 0.4rem 0;
+  }
+
+  .rules-text p {
+    margin-bottom: 0.6rem;
+    padding-left: 0.8rem;
+    border-left: 2px solid rgba(155, 75, 49, 0.4);
+  }
+
+  .roster {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    margin-top: 0.8rem;
+  }
+
+  .roster span {
+    padding: 0.2rem 0.7rem;
+    color: #7a6b58;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    font-size: 0.78rem;
+    letter-spacing: 0.06em;
+    background: rgba(255,252,245,0.5);
+  }
+
+  /* ---- 底部 ---- */
+  .footer {
+    text-align: center;
+    padding: 1.2rem;
+    color: var(--soft);
+    font-size: 0.7rem;
+    letter-spacing: 0.18em;
+  }
+
+  /* ---- 元信息横条 ---- */
+  .meta-bar {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 0.5rem 1.2rem;
+    padding: 0.6rem 1rem;
+    background: rgba(239, 232, 220, 0.3);
+    border-bottom: 1px solid rgba(200, 182, 155, 0.2);
+    font-size: 0.72rem;
+    color: var(--muted);
+    letter-spacing: 0.06em;
+  }
+
+  .meta-bar span {
+    white-space: nowrap;
+  }
+
+  .meta-bar .hl {
+    color: var(--cinnabar);
+  }
+
+  /* ---- 响应式 ---- */
+  @media (max-width: 640px) {
+    body { padding: 0.8rem 0.5rem; }
+    .hero { padding: 1.8rem 1rem 1.4rem; border-radius: 8px 8px 0 0; }
+    .main-grid { grid-template-columns: 1fr; border-radius: 0 0 8px 8px; }
+    .panel { padding: 1rem; }
+    .sch-item { flex-direction: column; gap: 0.2rem; }
+    .duty-item { flex-wrap: wrap; gap: 0.3rem; }
+    .meta-bar { justify-content: flex-start; }
+  }
+</style>
+</head>
+<body>
+  <div class="page">
+    <!-- Hero -->
+    <header class="hero">
+      <div class="course-tag">本周课程</div>
+      <h1>走向觉醒的修行之路</h1>
+      <div class="group-name">欢喜大力<em>·</em>三组</div>
+    </header>
+
+    <!-- 元信息 -->
+    <div class="meta-bar" id="metaBar">
+      <span id="weekRange">本周时间</span>
+      <span id="weekIndex">第 1 周</span>
+      <span id="nextUpdate">下次更新</span>
+    </div>
+
+    <!-- 主内容 -->
+    <div class="main-grid">
+      <!-- 左栏：组修方式 + 轮值 -->
+      <div class="panel">
+        <div class="panel-title">共修安排</div>
+
+        <div class="schedule-grid">
+          <div class="sch-item">
+            <span class="sch-label">组修方式</span>
+            <span class="sch-value" id="groupMethod">周六早上 8:00 线上</span>
+          </div>
+        </div>
+
+        <div style="height:0.8rem"></div>
+        <div class="panel-title">本周轮值</div>
+
+        <div class="duty-grid">
+          <div class="duty-item">
+            <span class="duty-label">组修主持</span>
+            <span>
+              <span class="duty-person" id="groupHost">曲登</span>
+              <span class="duty-note">每周轮值</span>
+            </span>
+          </div>
+          <div class="duty-item">
+            <span class="duty-label">班修主持</span>
+            <span>
+              <span class="duty-person" id="classHost">曲登</span>
+              <span class="duty-note">三周一轮，法芸跳过</span>
+            </span>
+          </div>
+          <div class="duty-item">
+            <span class="duty-label">早课带领</span>
+            <span>
+              <span class="duty-person" id="morningLead">曲登</span>
+              <span class="duty-note">三周一轮，跳过曲登</span>
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 右栏：规则 + 成员 -->
+      <div class="panel">
+        <div class="panel-title">组员 · 规则</div>
+
+        <div class="rules-text">
+          <p>人员固定，组修主持每周往下轮一位；班修主持每三周往下轮一位并跳过法芸；早课带领每三周往下轮一位，跳过曲登。组修方式在每周配置中二选一。</p>
+        </div>
+
+        <div class="roster">
+          <span>曲登</span><span>照量</span><span>一朵</span><span>法净</span><span>法芸</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer">清净发心 · 各安其位 · 随缘尽责</div>
+  </div>
+
+<script>
+(function () {
+  const people = ['曲登', '照量', '一朵', '法净', '法芸'];
+  const classHostQueue = ['曲登', '照量', '一朵', '法净'];
+  const morningLeadQueue = ['照量', '一朵', '法净', '法芸'];
+
+  const baseUpdateTime = new Date('2026-06-23T22:30:00+08:00');
+  const weekMs = 7 * 24 * 60 * 60 * 1000;
+
+  const now = new Date();
+  const elapsedWeeks = Math.max(0, Math.floor((now.getTime() - baseUpdateTime.getTime()) / weekMs));
+  const currentStart = new Date(baseUpdateTime.getTime() + elapsedWeeks * weekMs);
+  const nextStart = new Date(currentStart.getTime() + weekMs);
+  const currentEnd = new Date(nextStart.getTime() - 1);
+
+  const groupHost = people[elapsedWeeks % people.length];
+  const classHost = classHostQueue[Math.floor(elapsedWeeks / 3) % classHostQueue.length];
+  const morningLead = morningLeadQueue[Math.floor(elapsedWeeks / 3) % morningLeadQueue.length];
+
+  const formatDate = (d) => `${d.getFullYear()}年${d.getMonth()+1}月${d.getDate()}日`;
+  const formatUpdate = (d) => `${d.getMonth()+1}月${d.getDate()}日 22:30`;
+
+  document.getElementById('groupHost').textContent = groupHost;
+  document.getElementById('classHost').textContent = classHost;
+  document.getElementById('morningLead').textContent = morningLead;
+  document.getElementById('weekRange').textContent = `${formatDate(currentStart)} — ${formatDate(currentEnd)}`;
+  document.getElementById('nextUpdate').textContent = `下次更新：${formatUpdate(nextStart)}`;
+  document.getElementById('weekIndex').textContent = `第 ${elapsedWeeks + 1} 周`;
+})();
+</script>
+</body>
+</html>
